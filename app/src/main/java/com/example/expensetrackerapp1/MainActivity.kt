@@ -2,6 +2,7 @@ package com.example.expensetrackerapp1
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val expenses = ArrayList<Expense>()
     private lateinit var rvAdapter: RvAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("Activity Lifecycle", "onCreate was called")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -43,6 +45,25 @@ class MainActivity : AppCompatActivity() {
                 editTextNumber.text.clear()
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.d("Activity Lifecycle", "onResume was called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("Activity Lifecycle", "onPause was called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("Activity Lifecycle", "onStop was called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Activity Lifecycle", "onDestroy was called")
     }
 }
 
