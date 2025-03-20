@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp1
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<
         val expenseName: TextView = itemView.findViewById(R.id.ExpenseName)
         val amountView: TextView = itemView.findViewById(R.id.ExpenseAmount)
         val deleteButton: Button = itemView.findViewById(R.id.Delete)
+        val detailsButton: Button = itemView.findViewById(R.id.Details)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=
@@ -30,6 +32,13 @@ class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<
             expenses.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, expenses.size)
+        }
+        holder.detailsButton.setOnClickListener{
+            val context = holder.itemView.context
+            val intent = Intent(context, ExpenseDetailsActivity::class.java)
+            intent.putExtra("expense", expense.name)
+            intent.putExtra("amount", expense.amount)
+            context.startActivity(intent)
         }
     }
 
