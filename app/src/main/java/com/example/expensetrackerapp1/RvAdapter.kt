@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp1
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import java.io.IOException
 
 data class Expense(val name: String, val amount: Double)
 
-class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<RvAdapter.RvViewHolder>() {
+class RvAdapter(private val expenses: MutableList<Expense>, private val context: Context):
+    RecyclerView.Adapter<RvAdapter.RvViewHolder>() {
+
     class RvViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val expenseName: TextView = itemView.findViewById(R.id.ExpenseName)
         val amountView: TextView = itemView.findViewById(R.id.ExpenseAmount)
@@ -32,6 +37,7 @@ class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<
             expenses.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, expenses.size)
+            saveExpensesToFile(context, expenses)
         }
         holder.detailsButton.setOnClickListener{
             val context = holder.itemView.context
@@ -39,6 +45,16 @@ class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<
             intent.putExtra("expense", expense.name)
             intent.putExtra("amount", expense.amount)
             context.startActivity(intent)
+        }
+    }
+    private fun saveExpensesToFile(context: Context, expenses: List<Expense>) {
+        try {
+            val json = Gson().toJson(expenses)
+            context.openFileOutput("expenses.json", Context.MODE_PRIVATE).use { output ->
+                output.write(json.toByteArray())
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 

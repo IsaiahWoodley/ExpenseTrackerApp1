@@ -1,24 +1,28 @@
 package com.example.expensetrackerapp1
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.fragment.app.Fragment
+import java.io.File
+import java.io.FileNotFoundException
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.IOException
+
+private val FILE_NAME = "expenses.json"
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var recyclerView: RecyclerView
-    private val expenses = ArrayList<Expense>()
+    private val expenses = mutableListOf<Expense>()
     private lateinit var rvAdapter: RvAdapter
     private lateinit var footerFragment: FooterFragment
 
@@ -42,8 +46,11 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        rvAdapter = RvAdapter(expenses)
+
+        expenses.addAll(loadExpensesFromFile(this))
+        rvAdapter = RvAdapter(expenses, this)
         recyclerView.adapter = rvAdapter
+        updateFooter()
 
         button.setOnClickListener {
             val name = editTextText.text.toString().trim()
@@ -55,7 +62,8 @@ class MainActivity : AppCompatActivity() {
                 expenses.add(newExpense)
                 rvAdapter.notifyItemInserted(expenses.size - 1)
 
-                updateFooter(amount)
+                saveExpenseToFile(this, expenses)
+                updateFooter()
                 editTextText.text.clear()
                 editTextNumber.text.clear()
             }
@@ -67,13 +75,44 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateFooter(amount: Double) {
-        footerFragment.updateTotal(amount)
+    private fun updateFooter() {
+        val total = expenses.sumOf { it.amount }
+        footerFragment.updateTotal(total)
     }
     private fun replaceFragment(fragment: Fragment, containerId: Int) {
         supportFragmentManager.beginTransaction()
             .replace(containerId, fragment)
             .commit()
+    }
+    private fun saveExpenseToFile(context: Context, expenses : List<Expense>) {
+        try {
+            val json = Gson().toJson(expenses)
+            context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE).use { output ->
+                output.write(json.toByteArray())
+            }
+            Log.d("FileStorage", "Expenses saved successfully")
+        } catch (e: IOException) {
+            Log.e("FileStorage", "Error saving expense: ${e.message}")
+        }
+    }
+    private fun loadExpensesFromFile(context: Context): MutableList<Expense> {
+        val expenseList: MutableList<Expense> = mutableListOf()
+        try {
+            val file = File(context.filesDir, FILE_NAME)
+            if (!file.exists()) return expenseList
+
+            val json = file.readText()
+            val type = object : TypeToken<List<Expense>>() {}.type
+            val loadedExpense: List<Expense> = Gson().fromJson(json, type)
+            expenseList.addAll(loadedExpense)
+
+            Log.d("FileStorage", "Expenses loaded successfully")
+        } catch (e: FileNotFoundException) {
+            Log.e("FileStorage", "File not found: ${e.message}")
+        } catch (e: IOException) {
+            Log.e("FileStorage", "Error reading file: ${e.message}")
+        }
+        return expenseList
     }
     override fun onResume() {
         super.onResume()
