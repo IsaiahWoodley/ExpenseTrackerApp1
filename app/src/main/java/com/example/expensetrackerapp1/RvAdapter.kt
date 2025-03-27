@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class Expense(val name: String, val amount: String)
+data class Expense(val name: String, val amount: Double)
 
 class RvAdapter(private val expenses: ArrayList<Expense>): RecyclerView.Adapter<RvAdapter.RvViewHolder>() {
     class RvViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -7,11 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <FrameLayout
+        android:id="@+id/fragment_container_header"
+        android:layout_width="417dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="132dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <EditText
         android:id="@+id/editTextText"
         android:layout_width="266dp"
         android:layout_height="52dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="160dp"
         android:ems="10"
         android:hint="Expense Name"
         android:inputType="text"
@@ -30,19 +41,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText"
-        app:layout_constraintVertical_bias="0.407" />
+        app:layout_constraintVertical_bias="0.377" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
-        android:layout_width="424dp"
-        android:layout_height="367dp"
+        android:layout_width="371dp"
+        android:layout_height="307dp"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.936" />
+        app:layout_constraintVertical_bias="0.61" />
 
     <EditText
         android:id="@+id/editTextNumber"
@@ -53,10 +63,10 @@
         android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText"
-        app:layout_constraintVertical_bias="0.492" />
+        app:layout_constraintVertical_bias="0.487" />
 
     <Button
         android:id="@+id/financial"
@@ -67,5 +77,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container_footer"
+        android:layout_width="410dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycleView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
