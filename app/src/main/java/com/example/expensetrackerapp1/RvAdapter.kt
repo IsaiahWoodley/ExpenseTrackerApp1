@@ -2,18 +2,21 @@ package com.example.expensetrackerapp1
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import java.io.IOException
 
 data class Expense(val name: String, val amount: Double)
 
-class RvAdapter(private val expenses: MutableList<Expense>, private val context: Context):
+class RvAdapter(private val expenses: MutableList<Expense>, private val context: Context, private val fragment: Fragment):
     RecyclerView.Adapter<RvAdapter.RvViewHolder>() {
 
     class RvViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,12 +43,12 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
             saveExpensesToFile(context, expenses)
         }
         holder.detailsButton.setOnClickListener{
-            val context = holder.itemView.context
-            val intent = Intent(context, ExpenseDetailsActivity::class.java)
-            intent.putExtra("expense", expense.name)
-            intent.putExtra("amount", expense.amount)
-            context.startActivity(intent)
-        }
+            val bundle = Bundle().apply {
+                putString("expense", expense.name)
+                putDouble("amount", expense.amount)
+            }
+            fragment.findNavController().navigate(R.id.action_expenseListFragment_to_expenseDetailsFragment, bundle)
+            }
     }
     private fun saveExpensesToFile(context: Context, expenses: List<Expense>) {
         try {
