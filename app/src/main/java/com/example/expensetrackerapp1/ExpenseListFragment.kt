@@ -9,12 +9,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
+import android.widget.Switch
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.expensetrackerapp1.network.RetrofitInstance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -30,6 +36,8 @@ class ExpenseListFragment : Fragment() {
     private val expenses = mutableListOf<Expense>()
     private lateinit var rvAdapter: RvAdapter
     private var footerFragment: FooterFragment? = null
+    private lateinit var currencySpinner: Spinner
+    private lateinit var conversionSwitch: Switch
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +51,8 @@ class ExpenseListFragment : Fragment() {
         editTextNumber = view.findViewById(R.id.editTextNumber)
         button = view.findViewById(R.id.button)
         financialButton = view.findViewById(R.id.financial)
+        currencySpinner = view.findViewById(R.id.currencySpinner)
+        conversionSwitch = view.findViewById(R.id.conversionSwitch)
 
         recyclerView = view.findViewById(R.id.recycleView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -73,6 +83,24 @@ class ExpenseListFragment : Fragment() {
         financialButton.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.canada.ca/en/financial-consumer-agency/services/savings-investments/choose-financial-advisor.html"))
             startActivity(intent)
+        }
+        lifecycleScope.launch {
+            try {
+                val currencies = RetrofitInstance.api.getCurrencyList()
+                val currencyList = currencies.keys.sorted()
+
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    currencyList
+                )
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                currencySpinner.adapter = adapter
+                currencySpinner.setSelection(currencyList.indexOf("CAD"))
+
+            }catch (e: Exception) {
+                Log.e("Retrofit", "Error fetching currencies")
+            }
         }
     }
     private fun updateFooter() {
