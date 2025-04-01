@@ -2,6 +2,7 @@ package com.example.expensetrackerapp1
 
 import android.content.Context
 import android.content.Intent
+import android.icu.util.Currency
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import java.io.IOException
 
-data class Expense(val name: String, val amount: Double)
+data class Expense(val name: String, val amount: Double, val currency: String, val convertedCurrency: Double)
 
 class RvAdapter(private val expenses: MutableList<Expense>, private val context: Context, private val fragment: Fragment):
     RecyclerView.Adapter<RvAdapter.RvViewHolder>() {
@@ -34,7 +35,7 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
     override fun onBindViewHolder(holder: RvViewHolder, position: Int) {
         val expense = expenses[position]
         holder.expenseName.text = expense.name
-        holder.amountView.text = "$${expense.amount}"
+        holder.amountView.text = "$${expense.amount} ${expense.currency}  Converted: $${expense.convertedCurrency}"
 
         holder.deleteButton.setOnClickListener {
             expenses.removeAt(position)
@@ -46,6 +47,8 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
             val bundle = Bundle().apply {
                 putString("expense", expense.name)
                 putDouble("amount", expense.amount)
+                putString("currency", expense.currency)
+                putDouble("convertedCurrency", expense.convertedCurrency)
             }
             fragment.findNavController().navigate(R.id.action_expenseListFragment_to_expenseDetailsFragment, bundle)
             }

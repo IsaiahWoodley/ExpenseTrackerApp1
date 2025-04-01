@@ -60,7 +60,7 @@ class ExpenseListFragment : Fragment() {
 
             if (name.isNotEmpty() && amount.isNotEmpty()) {
                 val amount = amount.toDoubleOrNull() ?: 0.0
-                val newExpense = Expense(name, amount)
+                val newExpense = Expense(name, amount, "CAD", amount)
                 expenses.add(newExpense)
                 rvAdapter.notifyItemInserted(expenses.size - 1)
 
