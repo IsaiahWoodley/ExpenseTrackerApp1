@@ -19,8 +19,10 @@ class ExpenseDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val expenseName = arguments?.getString("expense")
         val expenseAmount = arguments?.getDouble("amount")
+        val convertedAmount =arguments?.getDouble("convertedCurrency")
+        val convertedCurrency = arguments?.getString("currency")
 
-        view.findViewById<TextView>(R.id.expenseName).text = "Name: $expenseName Amount: $$expenseAmount"
-
+        view.findViewById<TextView>(R.id.expenseName).text = "Name: $expenseName Amount: $$expenseAmount CAD"
+        view.findViewById<TextView>(R.id.expenseConverted).text = "Converted Amount: ${"%,.2f".format(convertedAmount)} $convertedCurrency"
     }
 }
