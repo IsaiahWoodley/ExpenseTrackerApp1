@@ -1,5 +1,6 @@
 package com.example.expensetrackerapp1
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -67,17 +68,33 @@ class ExpenseListFragment : Fragment() {
         button.setOnClickListener {
             val name = editTextText.text.toString().trim()
             val amount = editTextNumber.text.toString().trim()
+            val selectedCurrency = currencySpinner.selectedItem as? String ?: "CAD"
+            val conversionNeeded = conversionSwitch.isChecked
 
             if (name.isNotEmpty() && amount.isNotEmpty()) {
                 val amount = amount.toDoubleOrNull() ?: 0.0
-                val newExpense = Expense(name, amount, "CAD", amount)
-                expenses.add(newExpense)
-                rvAdapter.notifyItemInserted(expenses.size - 1)
+                lifecycleScope.launch {
+                    var convertedCurrency = amount
+                    if (conversionNeeded) {
+                        try {
+                            val exchangeData = RetrofitInstance.api.getExchangeRates("USD")
+                            val rate = exchangeData.rates[selectedCurrency] ?: 1.0
+                            convertedCurrency = amount * rate
 
-                saveExpenseToFile(requireContext(), expenses)
-                updateFooter()
-                editTextText.text.clear()
-                editTextNumber.text.clear()
+                        } catch (e: Exception) {
+                            Log.e("Retrofit", "Error fetching currencies")
+                        }
+                    }
+
+                    val newExpense = Expense(name, amount, selectedCurrency, convertedCurrency)
+                    expenses.add(newExpense)
+                    rvAdapter.notifyItemInserted(expenses.size - 1)
+
+                    saveExpenseToFile(requireContext(), expenses)
+                    updateFooter()
+                    editTextText.text.clear()
+                    editTextNumber.text.clear()
+                }
             }
         }
         financialButton.setOnClickListener{

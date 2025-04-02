@@ -35,7 +35,7 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
     override fun onBindViewHolder(holder: RvViewHolder, position: Int) {
         val expense = expenses[position]
         holder.expenseName.text = expense.name
-        holder.amountView.text = "$${expense.amount} ${expense.currency}  Converted: $${expense.convertedCurrency}"
+        holder.amountView.text = String.format("%.2f", expense.convertedCurrency, expense.currency)
 
         holder.deleteButton.setOnClickListener {
             expenses.removeAt(position)
