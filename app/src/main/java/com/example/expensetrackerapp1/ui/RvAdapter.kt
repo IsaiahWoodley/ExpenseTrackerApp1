@@ -1,8 +1,6 @@
-package com.example.expensetrackerapp1
+package com.example.expensetrackerapp1.ui
 
 import android.content.Context
-import android.content.Intent
-import android.icu.util.Currency
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.expensetrackerapp1.R
 import com.google.gson.Gson
 import java.io.IOException
 
@@ -25,6 +24,7 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
         val amountView: TextView = itemView.findViewById(R.id.ExpenseAmount)
         val deleteButton: Button = itemView.findViewById(R.id.Delete)
         val detailsButton: Button = itemView.findViewById(R.id.Details)
+        val currencyView: TextView =itemView.findViewById(R.id.Currency)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=
@@ -35,7 +35,8 @@ class RvAdapter(private val expenses: MutableList<Expense>, private val context:
     override fun onBindViewHolder(holder: RvViewHolder, position: Int) {
         val expense = expenses[position]
         holder.expenseName.text = expense.name
-        holder.amountView.text = String.format("%.2f", expense.convertedCurrency, expense.currency)
+        holder.amountView.text = String.format("%.2f", expense.convertedCurrency)
+        holder.currencyView.text = expense.currency
 
         holder.deleteButton.setOnClickListener {
             expenses.removeAt(position)

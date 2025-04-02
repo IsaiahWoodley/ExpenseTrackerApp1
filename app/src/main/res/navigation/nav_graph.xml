@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/expenseListFragment"
-        android:name="com.example.expensetrackerapp1.ExpenseListFragment"
+        android:name="com.example.expensetrackerapp1.ui.ExpenseListFragment"
         android:label="Expense List" >
         <action
             android:id="@+id/action_expenseListFragment_to_expenseDetailsFragment"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/expenseDetailsFragment"
-        android:name="com.example.expensetrackerapp1.ExpenseDetailsFragment"
+        android:name="com.example.expensetrackerapp1.ui.ExpenseDetailsFragment"
         android:label="Expense Details" />
 
 </navigation>

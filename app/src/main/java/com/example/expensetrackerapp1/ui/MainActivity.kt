@@ -1,15 +1,12 @@
-package com.example.expensetrackerapp1
+package com.example.expensetrackerapp1.ui
 
 
 import android.os.Bundle
-import android.util.Log
 
 import androidx.appcompat.app.AppCompatActivity
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.expensetrackerapp1.R
 
 
 class MainActivity : AppCompatActivity() {
